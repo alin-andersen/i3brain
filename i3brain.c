@@ -89,7 +89,9 @@ int main(void)
     
     printf("{\"version\":1}");
     
-
+    // init components
+    news_init();
+    
     line_begin();
     while(running)
     {
@@ -97,6 +99,7 @@ int main(void)
 	
 	// BEGIN
 
+	news_print(NOT_LAST, ticks);
 	ram_print(NOT_LAST, ticks);
 	cpu_print(NOT_LAST, ticks);
 	time_print(NOT_LAST, ticks);

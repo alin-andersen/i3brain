@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-g
+CFLAGS=-g -lpthread -lcurl
 OBJ = i3brain.c tick_timer.c global.c battery.c time.c cpu.c ram.c news.c
 
 %.o: %.c
