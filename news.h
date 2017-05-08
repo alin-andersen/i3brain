@@ -7,7 +7,6 @@
 
 #include <string.h>
 #include <pthread.h>
-#include <curl/curl.h>
 
 struct news_item
 {

@@ -35,6 +35,12 @@ enum prop_type
     PROP_MARKUP
 };
 
+enum prop_bool
+{
+    PROP_TRUE,
+    PROP_FALSE
+};
+
 extern char* color_string(enum color_type type);
 extern char* prop_string(enum prop_type type);
 

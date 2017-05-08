@@ -48,13 +48,7 @@ void battery_print(enum print_type type, int ticks)
     float percent = ((float)battery_current/(float)battery_max)*100.0f;
 
     blk_begin();
-
-    prop_begin(PROP_SEPARATOR);
-    printf("false");
-    prop_end(NOT_LAST);
     
-    // if battery is lower than 10
-    // change color to red
     if(percent < 10)
     {	
 	prop_begin(PROP_COLOR);
@@ -63,30 +57,7 @@ void battery_print(enum print_type type, int ticks)
     }
 
     prop_begin(PROP_FULL_TEXT);
-    printf("\"");
-    
-    if(percent < 20)
-    {
-	if(battery_timer == -1)
-	    tick_timer_init(&battery_timer, ticks, 4);
-
-	if(tick_timer_check(battery_timer, ticks))
-	{
-	    tick_timer_init(&battery_timer, ticks, 4);
-	    if(anim == 0) anim = 1;
-	    else anim = 0;
-	}
-	
-	// animation
-	if(anim == 0) printf(" %06.2f%%", percent);
-	else          printf(" %06.2f%%", percent);
-    }
-    else if(percent < 40) printf("");
-    else if(percent < 60) printf("");
-    else if(percent < 80) printf("");
-    else                  printf("");
-    
-    printf("\"");
+    printf("\"BAT %6.2f%%\"", percent);
     prop_end(LAST);
     
     blk_end(type);
@@ -98,7 +69,7 @@ battery_print_error:;
     blk_begin();
     prop_begin(PROP_FULL_TEXT);
     printf("\"");
-    printf(" ERROR");
+    printf("BAT ???.??%%");
     printf("\"");
     prop_end(LAST);
     blk_end(type);  

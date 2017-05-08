@@ -1,6 +1,6 @@
 #include "cpu.h"
 
-long user_old, nice_old, system_old, idle_old, iowait_old, irq_old, softirq_old, steal_old, guest_old, guest_nice_old = 0;
+float total_prev, total_idle_prev = 0.0f;
 
 void cpu_print(enum print_type type, int ticks)
 {
@@ -13,41 +13,29 @@ void cpu_print(enum print_type type, int ticks)
 	goto cpu_print_error;
     fclose(file);
 
-//    printf("%ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
-//	   user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice);
+    long total = user + nice + system + idle + iowait + irq + softirq + steal;
+    long total_idle = idle + iowait;
 
-    idle_old = idle_old + iowait_old;
-    idle     = idle + iowait;
+    long total_diff = total - total_prev;
+    long total_idle_diff = total_idle - total_idle_prev;
+
+    float cpu_usage = ((float)(total_diff - total_idle_diff)/(float)total_diff) * 100.0f;
     
-    long non_idle_old = user_old + nice_old + system_old + irq_old + softirq_old + steal_old;
-    long non_idle = user + nice + irq + softirq + steal;
-
-    long total_old = idle_old + non_idle_old;
-    long total     = idle + non_idle;
-    
-    float cpu_usage = (float)((total - total_old) - (idle - idle_old))/((float)(total - total_old))*100.0f;
-
-    user = user_old;
-    nice = nice_old;
-    system = system_old;
-    idle = idle_old;
-    iowait = iowait_old;
-    irq = irq_old;
-    softirq = softirq_old;
-    steal = steal_old;
-    guest = guest_old;
-    guest_nice = guest_nice_old;
+    total_prev = total;
+    total_idle_prev = total_idle;
     
     blk_begin();
 
-    prop_begin(PROP_SEPARATOR);
-    printf("false");
-    prop_end(NOT_LAST);
+    if(cpu_usage > 90)
+    {
+	prop_begin(PROP_COLOR);
+	printf("\"%s\"", color_string(COLOR_RED));
+	prop_end(NOT_LAST);
+    }
     
     prop_begin(PROP_FULL_TEXT);
-    printf("\"CPU %06.2f%%\"", cpu_usage);
+    printf("\"CPU %6.2f%%\"", cpu_usage);
     prop_end(LAST);
-
     blk_end(type);
 
     return;
@@ -55,10 +43,6 @@ void cpu_print(enum print_type type, int ticks)
 cpu_print_error:;
 
     blk_begin();
-
-    prop_begin(PROP_SEPARATOR);
-    printf("false");
-    prop_end(NOT_LAST);
     
     prop_begin(PROP_FULL_TEXT);
     printf("\"CPU ???.??%%\"");

@@ -1,24 +1,17 @@
 #include "news.h"
 
-struct elist news;
-pthread_t thread;
-pthread_spinlock_t lock;
+#include "news_fetcher.h"
 
-CURL* curl;
-CURLcode res;
-
-size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp)
-{
-    //printf("%p %ld %ld %p\n", buffer, size, nmemb, userp);
-}
+char* default_text = "no news";
 
 #define NEWS_SIZE 50
 #define BUFFER_SIZE 128
 
-char* buffer;
+char* buffer = NULL;
 int   buffer_len;
 
-char* text;
+char* text = NULL;
+int   text_len;
 
 int size;
 int beg;
@@ -38,7 +31,7 @@ void news_buffer_init(const char* text)
 
     // init buffer
     for(int i = 0; i < buffer_len-1; i++)
-	buffer[i] = ' ';
+	buffer[i] = '_';
     buffer[buffer_len-1] = '\0';
 
     // copy text into buffer
@@ -59,7 +52,7 @@ void news_buffer_next(void)
 	beg += 1;
     else
     {
-	news_buffer_init("Somebody onces told me the world is gonna roll me I ain't the sharpest tool in the shed");
+	news_buffer_init(default_text);
 	news_buffer_next();
     }
 
@@ -85,52 +78,43 @@ void news_buffer_next(void)
 
 void news_init(void)
 {
-    news_buffer_init("no news :(");
-    
-    ELIST_INIT(&news);
-    /*
-    curl_global_init(CURL_GLOBAL_DEFAULT);
-    curl = curl_easy_init();
-    if(curl)
-    {
-	curl_easy_setopt(curl, CURLOPT_URL, "https://newsapi.org/v1/articles");
-	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
-	res = curl_easy_perform(curl);
-
-	if(res != CURLE_OK)
-	{
-	    //printf("ERROR");
-	    return;
-	}
-
-	curl_easy_cleanup(curl);
-	}*/
+    struct news_fetch* fetch = news_fetcher_fetch();
+    printf("sources count: %d\n", fetch->sources_count);
 }
 
 void news_dest(void)
 {
-//    curl_global_cleanup();
+    
 }
 
 int timer = -1;
 
 void news_print(enum print_type type, int ticks)
 {
-    news_buffer_next();
+    /*
+    //news_buffer_next();
 
-    //printf("\n%d %d %d\n", beg, end, end-beg);
-    
     blk_begin();
+
     prop_begin(PROP_SEPARATOR);
     printf("false");
     prop_end(NOT_LAST);
+    
+    prop_begin(PROP_FULL_TEXT);
+    printf("\"NEWS\"");
+    prop_end(LAST);
+
+    blk_end(NOT_LAST);
+    
+    blk_begin();
+    
     prop_begin(PROP_COLOR);
     printf("\"%s\"", color_string(COLOR_GREEN));
     prop_end(NOT_LAST);
+
     prop_begin(PROP_FULL_TEXT);
-    printf("\"|%s|\"", text);
+    printf("\"%s\"", text);
     prop_end(LAST);
-    blk_end(type);
+
+    blk_end(type);*/
 }

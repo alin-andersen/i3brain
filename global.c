@@ -42,6 +42,17 @@ char* prop_string(enum prop_type type)
     }
 }
 
+char* prop_bool(enum prop_bool bool)
+{
+    switch(bool)
+    {
+    case PROP_TRUE:
+	return "true";
+    case PROP_FALSE:
+	return "false";
+    }
+}
+
 void line_begin(void)
 {
     printf("[");
@@ -74,6 +85,30 @@ void prop_end(enum print_type type)
     if(type != LAST) printf(",");
 }
 
+// PROPS
+
+void prop_full_text(enum print_type type, const char* text)
+{
+    prop_begin(PROP_FULL_TEXT);
+    printf("\"%s\"", text);
+    prop_end(type);
+}
+
+void prop_color(enum print_type type, enum color_type color)
+{
+    prop_begin(PROP_COLOR);
+    printf("\"%s\"", color_string(color));
+    prop_end(type);
+}
+
+
+void prop_separator(enum print_type type, enum prop_bool bool)
+{
+    prop_begin(PROP_SEPARATOR);
+    printf("%s", prop_bool(bool));
+    prop_end(type);
+}
+
 int read_int(const char* path)
 {
     FILE* file = fopen(path,"r");
@@ -83,6 +118,6 @@ int read_int(const char* path)
     if(fscanf(file, "%d", &i) != 1)
 	i = -1;
     fclose(file);
-    
+ 
     return i;
 }
