@@ -41,4 +41,7 @@ struct news_fetch
 extern struct news_fetch*   news_fetcher_fetch(void);
 extern struct news_article* news_fetcher_next (struct news_fetch* fetch);
 
+extern void news_fetcher_article_dest(struct news_article* article);
+extern void news_fetcher_source_dest (struct news_source*  source);
+
 #endif

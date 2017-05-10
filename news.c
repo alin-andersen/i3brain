@@ -45,16 +45,16 @@ void news_buffer_init(const char* text)
 //    printf("\n'%s'\n", buffer);
 }
 
+char b[2048];
+struct news_fetch* fetch;
+
 // updates the news buffer
-void news_buffer_next(void)
+void news_buffer_next(void(*callback)(void))
 {   
     if(beg + size != buffer_len - 1)
 	beg += 1;
     else
-    {
-	news_buffer_init(default_text);
-	news_buffer_next();
-    }
+	callback();
 
     if(end != buffer_len - 1)
 	end += 1;
@@ -78,8 +78,8 @@ void news_buffer_next(void)
 
 void news_init(void)
 {
-    struct news_fetch* fetch = news_fetcher_fetch();
-    printf("sources count: %d\n", fetch->sources_count);
+    fetch = news_fetcher_fetch();
+    news_buffer_init("news on the way ...");
 }
 
 void news_dest(void)
@@ -87,12 +87,23 @@ void news_dest(void)
     
 }
 
+void news_next(void)
+{
+    struct news_article* article = news_fetcher_next(fetch);
+    sprintf(b, "%s %s", article->title, article->summary);
+    printf("%s\n", b);
+    fflush(stdout);
+    news_buffer_init(b);
+    news_buffer_next(news_next);
+}
+
 int timer = -1;
 
 void news_print(enum print_type type, int ticks)
 {
-    /*
-    //news_buffer_next();
+    return;
+    
+    news_buffer_next(news_next);
 
     blk_begin();
 
@@ -116,5 +127,5 @@ void news_print(enum print_type type, int ticks)
     printf("\"%s\"", text);
     prop_end(LAST);
 
-    blk_end(type);*/
+    blk_end(type);
 }

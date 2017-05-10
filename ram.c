@@ -20,16 +20,9 @@ void ram_print(enum print_type type, int ticks)
 
     mem_used = mem_total - mem_free;
 
-    
     blk_begin();
-
     prop_begin(PROP_FULL_TEXT);
-
-    if(mem_used > 1000000)
-    	printf("\"RAM %5.2fGB\"", mem_used/1000000.0f);
-    else
-	printf("\"RAM %5.2fMB\"", mem_used/1000.0f);
-
+    printf("\"RAM_%04.1fGB\"", mem_used/1000000.0f);
     prop_end(LAST);
     blk_end(type);
 
@@ -42,7 +35,7 @@ ram_print_error:;
     printf("false");
     prop_end(NOT_LAST);
     prop_begin(PROP_FULL_TEXT);
-    printf("\"RAM ??.??MB\"");
+    printf("\"RAM ??.??GB\"");
     prop_end(LAST);
-    blk_end(type);    
+    blk_end(type);
 }

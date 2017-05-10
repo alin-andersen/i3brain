@@ -39,7 +39,7 @@ int main(void)
     printf("{\"version\":1}");
     
     // init components
-    news_init();
+    //news_init();
     
     line_begin();
     while(running)
