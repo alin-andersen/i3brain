@@ -5,6 +5,7 @@
 #include "cpu.h"
 #include "ram.h"
 #include "news.h"
+#include "io.h"
 
 struct sigaction sig_handler;
 int running = 1;
@@ -34,12 +35,12 @@ int main(void)
     // tick time
     struct timespec time;
     time.tv_sec = 0;
-    time.tv_nsec = 250000000;
+    time.tv_nsec = 100000000;
     
     printf("{\"version\":1}");
     
     // init components
-    //news_init();
+    news_init();
     
     line_begin();
     while(running)
@@ -51,6 +52,8 @@ int main(void)
 	news_print(NOT_LAST, ticks);
 	time_print(NOT_LAST, ticks);
 	date_print(NOT_LAST, ticks);
+
+	io_print(NOT_LAST, ticks);
 	ram_print(NOT_LAST, ticks);
 	cpu_print(NOT_LAST, ticks);
 	battery_print(LAST, ticks);

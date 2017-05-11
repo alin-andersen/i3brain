@@ -3,6 +3,6 @@
 
 #include "global.h"
 
-extern void io_print(void);
+extern void io_print(enum print_type type, int ticks);
 
 #endif

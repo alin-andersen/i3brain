@@ -2,7 +2,7 @@
 
 #include "news_fetcher.h"
 
-char* default_text = "no news";
+char* default_text = "(empty)";
 
 #define NEWS_SIZE 50
 #define BUFFER_SIZE 128
@@ -54,7 +54,11 @@ void news_buffer_next(void(*callback)(void))
     if(beg + size != buffer_len - 1)
 	beg += 1;
     else
-	callback();
+    {
+	if(callback != NULL) callback();
+	else news_buffer_init(default_text);
+
+    }
 
     if(end != buffer_len - 1)
 	end += 1;
@@ -78,32 +82,16 @@ void news_buffer_next(void(*callback)(void))
 
 void news_init(void)
 {
-    fetch = news_fetcher_fetch();
-    news_buffer_init("news on the way ...");
-}
-
-void news_dest(void)
-{
-    
-}
-
-void news_next(void)
-{
-    struct news_article* article = news_fetcher_next(fetch);
+    struct news_article* article = news_fetcher_next(news_fetcher_fetch());
     sprintf(b, "%s %s", article->title, article->summary);
-    printf("%s\n", b);
-    fflush(stdout);
+//    printf("%s\n", b);
+//    fflush(stdout);
     news_buffer_init(b);
-    news_buffer_next(news_next);
 }
-
-int timer = -1;
 
 void news_print(enum print_type type, int ticks)
 {
-    return;
-    
-    news_buffer_next(news_next);
+    news_buffer_next(news_init);
 
     blk_begin();
 

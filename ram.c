@@ -22,7 +22,7 @@ void ram_print(enum print_type type, int ticks)
 
     blk_begin();
     prop_begin(PROP_FULL_TEXT);
-    printf("\"RAM_%04.1fGB\"", mem_used/1000000.0f);
+    printf("\"MEM_%04.1f\"", mem_used/1000000.0f);
     prop_end(LAST);
     blk_end(type);
 
@@ -35,7 +35,7 @@ ram_print_error:;
     printf("false");
     prop_end(NOT_LAST);
     prop_begin(PROP_FULL_TEXT);
-    printf("\"RAM ??.??GB\"");
+    printf("\"MEM_??.?\"");
     prop_end(LAST);
     blk_end(type);
 }

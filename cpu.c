@@ -27,7 +27,7 @@ void cpu_print(enum print_type type, int ticks)
     long total_idle_diff = total_idle - total_idle_prev;
 
     float cpu_usage = ((float)(total_diff - total_idle_diff)/(float)total_diff) * 100.0f;
-    float usage = min(cpu_usage, cpu_usage_prev) + abs(cpu_usage - cpu_usage_prev) * 0.25f;
+    float usage = min(cpu_usage, cpu_usage_prev) + abs(cpu_usage - cpu_usage_prev) * 0.1f;
     cpu_usage_prev = cpu_usage;
     
     total_prev = total;
@@ -43,7 +43,7 @@ void cpu_print(enum print_type type, int ticks)
     }
     
     prop_begin(PROP_FULL_TEXT);
-    printf("\"CPU_%03.0f%%\"", usage);
+    printf("\"CPU_%03.0f\"", usage);
     prop_end(LAST);
     blk_end(type);
 
@@ -54,7 +54,7 @@ cpu_print_error:;
     blk_begin();
     
     prop_begin(PROP_FULL_TEXT);
-    printf("\"CPU_???%%\"");
+    printf("\"CPU_???\"");
     prop_end(LAST);
 
     blk_end(type);

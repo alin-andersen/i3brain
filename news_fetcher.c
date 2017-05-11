@@ -77,6 +77,8 @@ static void news_fetcher_parse_sources(struct news_fetch* fetch, struct json_obj
 	struct news_source* source = news_fetcher_parse_source(obj);
 	if(source == NULL) continue;
 
+	//printf("\n\n%p\n\n", source);
+
 	if(i == 0) fetch->last = source;
 
 	//printf("%s %s\n", source->id, source->name);
@@ -99,20 +101,24 @@ static void news_fetcher_parse_article(struct news_source* source, struct json_o
     json_object_object_foreach(json, key, val)
     {
 	if(strcmp(key, "title") == 0)
-	{	   
-	    if(json_object_get_string(val) == NULL) continue;
+	{
+	    //if(json_object_get_string(val) == NULL) continue;
 	    article->title = strdup(json_object_get_string(val));
 	    continue;
 	}
 
 	if(strcmp(key,"description") == 0)
 	{
-	    if(json_object_get_string(val) == NULL) continue;
+	    //if(json_object_get_string(val) == NULL) continue;
 	    article->summary = strdup(json_object_get_string(val));
 	    continue;
 	}
     }
 
+    //printf("Article %p\n", article);
+    //printf("%s\n", article->title);
+    //printf("%s\n", article->summary);
+    
     // add article to source
     ELIST_LINK_BEFORE(&source->articles, &article->list);
     source->articles_count++;
@@ -223,30 +229,38 @@ struct news_fetch* news_fetcher_fetch(void)
 		}
 
 		json_object_put(json);
-	    }
-	    
+	    }   
 	}
     }
     ELIST_FOREACH_END;
-    
+
+   
+
     return fetch;
 }
 
 // returns the next article
 struct news_article* news_fetcher_next(struct news_fetch* fetch)
 {
-    if(ELIST_EMPTY(&fetch->sources)) return NULL;
-
-    struct news_source* source = STRUCT_OFFSET(&ELIST_FIRST(&fetch->sources), struct news_source, list);
-    
-    if(ELIST_EMPTY(&source->articles))
+    ELIST_FOREACH_BEG(&fetch->sources);
     {
-	ELIST_UNLINK(&source->list);
-	news_fetcher_source_dest(source);
-	return news_fetcher_next(fetch);
-    }
+	struct news_source* source = (struct news_source*) ELIST_FOREACH_DATA(struct news_source, list);
 
-    struct news_article* article = STRUCT_OFFSET(&ELIST_FIRST(&source->articles), struct news_article, list);
-    ELIST_UNLINK(&article->list);
-    return article;
+	ELIST_FOREACH_BEG(&source->articles);
+	{
+	    struct news_article* article = (struct news_article*) ELIST_FOREACH_DATA(struct news_article, list);
+
+	    ELIST_UNLINK(&article->list);
+	    //printf("Article %p\n", article);
+	    //printf("%s\n", article->title);
+	    //printf("%s\n", article->summary);
+	    //fflush(stdout);
+
+	    return article;
+	}
+	ELIST_FOREACH_END;
+    }
+    ELIST_FOREACH_END;
+
+    return NULL;
 }
