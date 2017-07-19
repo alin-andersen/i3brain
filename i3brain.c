@@ -4,7 +4,6 @@
 #include "time.h"
 #include "cpu.h"
 #include "ram.h"
-#include "news.h"
 #include "io.h"
 
 struct sigaction sig_handler;
@@ -34,13 +33,10 @@ int main(void)
 
     // tick time
     struct timespec time;
-    time.tv_sec = 0;
-    time.tv_nsec = 100000000;
+    time.tv_sec  = 0;
+    time.tv_nsec = 150000000;    
     
     printf("{\"version\":1}");
-    
-    // init components
-    news_init();
     
     line_begin();
     while(running)
@@ -49,19 +45,14 @@ int main(void)
 	
 	// BEGIN
 
-	news_print(NOT_LAST, ticks);
 	time_print(NOT_LAST, ticks);
-	date_print(NOT_LAST, ticks);
-
-	io_print(NOT_LAST, ticks);
 	ram_print(NOT_LAST, ticks);
 	cpu_print(NOT_LAST, ticks);
 	battery_print(LAST, ticks);
 
 	// END
 
-	line_end(NOT_LAST);
-	
+	line_end(NOT_LAST);	
 	fflush(stdout);
 	
 	ticks++;

@@ -19,6 +19,7 @@ enum color_type
     COLOR_RED,
     COLOR_GREEN,
     COLOR_BLUE,
+    COLOR_YELLOW,
 };
 
 enum prop_type

@@ -12,6 +12,8 @@ char* color_string(enum color_type type)
 	return "#00ff00";
     case COLOR_BLUE:
 	return "#0000ff";
+    case COLOR_YELLOW:
+	return "#ffff00";
     }
 }
 

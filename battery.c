@@ -55,9 +55,15 @@ void battery_print(enum print_type type, int ticks)
 	printf("\"%s\"", color_string(COLOR_RED));
 	prop_end(NOT_LAST);
     }
+    else
+    {
+    	prop_begin(PROP_COLOR);
+	printf("\"%s\"", color_string(COLOR_GREEN));
+	prop_end(NOT_LAST);
+    }
 
     prop_begin(PROP_FULL_TEXT);
-    printf("\"BAT_%03.0f\"", percent);
+    printf("\"BAT %6.2f%%\"", percent);
     prop_end(LAST);
     
     blk_end(type);
@@ -69,7 +75,7 @@ battery_print_error:;
     blk_begin();
     prop_begin(PROP_FULL_TEXT);
     printf("\"");
-    printf("BAT_???");
+    printf("BAT ???.??%%");
     printf("\"");
     prop_end(LAST);
     blk_end(type);  
