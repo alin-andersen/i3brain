@@ -37,7 +37,7 @@ void ram_print(enum print_type type, int ticks)
     }
     
     prop_begin(PROP_FULL_TEXT);
-    printf("\"MEM %6.2f%%\"", mem_usage_percent);
+    printf("\"MEM %2.0f%%\"", mem_usage_percent);
     prop_end(LAST);
 
     blk_end(type);

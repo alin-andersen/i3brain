@@ -49,8 +49,9 @@ void cpu_print(enum print_type type, int ticks)
     }
     
     prop_begin(PROP_FULL_TEXT);
-    printf("\"CPU %6.2f%%\"", usage);
+    printf("\"CPU %2.0f%%\"", usage);
     prop_end(LAST);
+    
     blk_end(type);
 
     return;
@@ -60,7 +61,7 @@ cpu_print_error:;
     blk_begin();
     
     prop_begin(PROP_FULL_TEXT);
-    printf("\"CPU_???%%\"");
+    printf("\"CPU ???%%\"");
     prop_end(LAST);
 
     blk_end(type);
