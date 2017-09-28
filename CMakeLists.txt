@@ -20,3 +20,4 @@ set(I3BRAIN_SOURCE_FILES
 )
 
 add_executable(i3brain ${I3BRAIN_SOURCE_FILES})
+install(TARGETS i3brain RUNTIME DESTINATION bin)
