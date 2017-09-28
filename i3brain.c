@@ -1,7 +1,7 @@
 #include "global.h"
 
 #include "battery.h"
-#include "time.h"
+#include "time2.h"
 #include "cpu.h"
 #include "ram.h"
 #include "io.h"
@@ -14,11 +14,15 @@ void handler(int signal)
 {
     switch(signal)
     {
+	
     case SIGSTOP:
+    {
 	running = 0;
 	break;
-    case SIGCONT:
-	break;
+    }
+    
+    case SIGCONT: break;
+	
     }
 }
 

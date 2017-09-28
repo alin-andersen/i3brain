@@ -1,4 +1,4 @@
-#include "time.h"
+#include "time2.h"
 
 void time_print(enum print_type type, int ticks)
 {
@@ -11,5 +11,7 @@ void time_print(enum print_type type, int ticks)
     printf("\"TIME %02d:%02d:%02d %02d.%02d.%02d\"", tm.tm_hour, tm.tm_min, tm.tm_sec, tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
     prop_end(LAST);
 
-    blk_end(type);  
+    blk_end(type);
 }
+
+

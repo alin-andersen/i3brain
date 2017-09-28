@@ -111,6 +111,8 @@ void prop_separator(enum print_type type, enum prop_bool bool)
     prop_end(type);
 }
 
+// help functions
+
 int read_int(const char* path)
 {
     FILE* file = fopen(path,"r");

@@ -1,3 +1,5 @@
+i3brain
+
 # Object files
 *.o
 *.ko
@@ -31,3 +33,4 @@
 # Debug files
 *.dSYM/
 *.su
+**/build/**
